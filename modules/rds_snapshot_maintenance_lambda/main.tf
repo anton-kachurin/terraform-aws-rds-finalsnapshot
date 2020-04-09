@@ -22,7 +22,7 @@ data "archive_file" "maintain-rds-final-snapshots-zip" {
 
 resource "aws_lambda_function" "maintain-rds-final-snapshots" {
   count=var.include_this_module?1:0
-  filename = substr(data.archive_file.maintain-rds-final-snapshots-zip.0.output_path, length(path.cwd) + 1, -1)
+  filename = data.archive_file.maintain-rds-final-snapshots-zip.0.output_path
   function_name = var.function_name
   role = aws_iam_role.maintain-rds-final-snapshots-role.0.arn
   handler = "maintain_rds_final_snapshots.handler"
@@ -77,7 +77,7 @@ data "archive_file" "find-final-snapshot-zip" {
 
 resource "aws_lambda_function" "find-final-snapshot" {
   count=var.include_this_module?1:0
-  filename = substr(data.archive_file.find-final-snapshot-zip.0.output_path, length(path.cwd) + 1, -1)
+  filename = data.archive_file.find-final-snapshot-zip.0.output_path
   function_name = "${var.function_name}Q"
   role = aws_iam_role.find-final-snapshot-role.0.arn
   handler = "find_final_snapshot.handler"
