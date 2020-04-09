@@ -61,7 +61,7 @@ resource "aws_iam_role_policy_attachment" "attach-policy-to-find-final-snapshot-
 # Execute Lambda, after attaching the policy.
 # ---------------------------------------------------------------------------------------------------------------------
 module "find_final_snapshot" {
-  source="connect-group/lambda-exec/aws"
+  source="git::https://github.com/anton-kachurin/terraform-aws-lambda-exec.git?ref=1.1.0"
   name                = "find-snapshot-for-${var.identifier}"
   lambda_function_arn = "${local.query_function_arn}"
 

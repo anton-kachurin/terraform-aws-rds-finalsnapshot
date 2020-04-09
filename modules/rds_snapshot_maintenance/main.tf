@@ -136,7 +136,7 @@ resource "aws_iam_role_policy_attachment" "attach-reboot-policy" {
 # Execute Lambda, after attaching the policy and after creating the database.
 # ---------------------------------------------------------------------------------------------------------------------
 module "exec-maintenance-lambda-delete-old-snapshots" {
-  source              = "connect-group/lambda-exec/aws"
+  source              = "git::https://github.com/anton-kachurin/terraform-aws-lambda-exec.git?ref=1.1.0"
   name                = "manage-finalsnapshot-for-${var.identifier}"
   lambda_function_arn = "${local.function_arn}"
 
