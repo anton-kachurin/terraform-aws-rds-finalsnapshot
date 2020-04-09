@@ -53,8 +53,8 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "attach-policy-to-find-final-snapshot-lambda" {
-  role = "${local.query_function_role}"
-  policy_arn = "${aws_iam_policy.find_final_snapshot-policy.arn}"
+  role = local.query_function_role
+  policy_arn = aws_iam_policy.find_final_snapshot-policy.arn
 }
 
 # ---------------------------------------------------------------------------------------------------------------------

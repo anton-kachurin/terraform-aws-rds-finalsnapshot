@@ -16,13 +16,13 @@ terraform {
 
 module "maintain-rds-final-snapshots-lambda" {
   source = "../rds_snapshot_maintenance_lambda"
-  include_this_module="${length(var.shared_lambda_function_name)==0}"
+  include_this_module=length(var.shared_lambda_function_name)==0
   function_name = "maintain_rds_final_snapshots_${var.identifier}"
 }
 
 data "aws_lambda_function" "maintain-rds-final-snapshots" {
-  count="${length(var.shared_lambda_function_name)>0 ? 1 : 0}"
-  function_name="${var.shared_lambda_function_name}"
+  count=length(var.shared_lambda_function_name)>0 ? 1 : 0
+  function_name=var.shared_lambda_function_name
 }
 
 locals {
@@ -80,7 +80,7 @@ EOF
 }
 
 resource "aws_iam_policy" "reboot-rds-policy" {
-  count = "${var.is_cluster ? 0 : 1}"
+  count = var.is_cluster ? 0 : 1
   name = "manage_reboot_${var.identifier}_policy"
   path = "/"
   description = "MANAGED BY TERRAFORM Allow Lambda to reboot db instance"
@@ -99,7 +99,7 @@ EOF
 }
 
 resource "aws_iam_policy" "reboot-cluster-policy" {
-  count = "${var.is_cluster ? 1 : 0}"
+  count = var.is_cluster ? 1 : 0
   name = "manage_reboot_${var.identifier}_policy"
   path = "/"
   description = "MANAGED BY TERRAFORM Allow Lambda to reboot db instance"
@@ -123,13 +123,13 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "attach-policy" {
-  role = "${local.function_role}"
-  policy_arn = "${aws_iam_policy.maintain-rds-final-snapshots-policy.arn}"
+  role = local.function_role
+  policy_arn = aws_iam_policy.maintain-rds-final-snapshots-policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "attach-reboot-policy" {
-  role = "${local.function_role}"
-  policy_arn = "${element(concat(aws_iam_policy.reboot-rds-policy.*.arn, aws_iam_policy.reboot-cluster-policy.*.arn), 0)}"
+  role = local.function_role
+  policy_arn = element(concat(aws_iam_policy.reboot-rds-policy.*.arn, aws_iam_policy.reboot-cluster-policy.*.arn), 0)
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
